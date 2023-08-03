@@ -1,0 +1,29 @@
+syntax="proto3";
+package greet;
+
+option go_package="github.com/shubhamdixit863/grpctutorial/greet/proto";
+
+
+message GreetResponse{
+    string message=1;
+    string address=2;
+}
+
+message GreetRequest{
+  string message=1;
+  string address=2;
+}
+
+
+service GreetService{
+  //unary call
+  rpc GreetOnce(GreetRequest) returns (GreetResponse);
+  //server streaming
+ // rpc DummyCallServerStreaming(DummyRequest) returns (stream DummyResponse);
+   // client streaming
+  //rpc DummyCallClientStreaming( stream DummyRequest) returns (DummyResponse);
+
+  // Bidirectional streaming
+
+  //rpc DummyCallBiDirectionalStreaming( stream DummyRequest) returns ( stream DummyResponse);
+}
