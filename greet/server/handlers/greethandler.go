@@ -19,3 +19,11 @@ func (s Server) GreetOnce(context.Context, *proto.GreetRequest) (*proto.GreetRes
 		Address: s.Repo.Save(),
 	}, nil
 }
+
+func (s Server) CreateGreet(context.Context, *proto.CreateGreetRequest) (*proto.GreetResponse, error) {
+	fmt.Println("Client invoked the server", s.Repo.Save())
+	return &proto.GreetResponse{
+		Message: s.Repo.Save(),
+		Address: s.Repo.Save(),
+	}, nil
+}

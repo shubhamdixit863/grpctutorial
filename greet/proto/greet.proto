@@ -14,10 +14,19 @@ message GreetRequest{
   string address=2;
 }
 
+message CreateGreetRequest{
+  string name=1;
+  string address=2;
+  string email=3;
+  string password=4;
+}
+
 
 service GreetService{
   //unary call
   rpc GreetOnce(GreetRequest) returns (GreetResponse);
+  rpc CreateGreet(CreateGreetRequest) returns (GreetResponse);
+
   //server streaming
  // rpc DummyCallServerStreaming(DummyRequest) returns (stream DummyResponse);
    // client streaming

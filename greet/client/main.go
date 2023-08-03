@@ -33,4 +33,18 @@ func main() {
 		return
 	}
 	fmt.Println("Response received from the greet server", once)
+	data := proto.CreateGreetRequest{
+		Name:     "Shubham",
+		Address:  "Delhi",
+		Email:    "something@gmail.com",
+		Password: "12345466",
+	}
+	save, err := c.CreateGreet(context.Background(), &data)
+
+	if err != nil {
+		fmt.Println("Error in calling the grpc server GreetOnce Method", err)
+		return
+	}
+	fmt.Println("Response received from the greet server", save)
+
 }

@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type GreetServiceClient interface {
 	// unary call
 	GreetOnce(ctx context.Context, in *GreetRequest, opts ...grpc.CallOption) (*GreetResponse, error)
+	CreateGreet(ctx context.Context, in *CreateGreetRequest, opts ...grpc.CallOption) (*GreetResponse, error)
 }
 
 type greetServiceClient struct {
@@ -43,12 +44,22 @@ func (c *greetServiceClient) GreetOnce(ctx context.Context, in *GreetRequest, op
 	return out, nil
 }
 
+func (c *greetServiceClient) CreateGreet(ctx context.Context, in *CreateGreetRequest, opts ...grpc.CallOption) (*GreetResponse, error) {
+	out := new(GreetResponse)
+	err := c.cc.Invoke(ctx, "/greet.GreetService/CreateGreet", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GreetServiceServer is the server API for GreetService service.
 // All implementations must embed UnimplementedGreetServiceServer
 // for forward compatibility
 type GreetServiceServer interface {
 	// unary call
 	GreetOnce(context.Context, *GreetRequest) (*GreetResponse, error)
+	CreateGreet(context.Context, *CreateGreetRequest) (*GreetResponse, error)
 	mustEmbedUnimplementedGreetServiceServer()
 }
 
@@ -58,6 +69,9 @@ type UnimplementedGreetServiceServer struct {
 
 func (UnimplementedGreetServiceServer) GreetOnce(context.Context, *GreetRequest) (*GreetResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GreetOnce not implemented")
+}
+func (UnimplementedGreetServiceServer) CreateGreet(context.Context, *CreateGreetRequest) (*GreetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateGreet not implemented")
 }
 func (UnimplementedGreetServiceServer) mustEmbedUnimplementedGreetServiceServer() {}
 
@@ -90,6 +104,24 @@ func _GreetService_GreetOnce_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GreetService_CreateGreet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateGreetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GreetServiceServer).CreateGreet(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/greet.GreetService/CreateGreet",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GreetServiceServer).CreateGreet(ctx, req.(*CreateGreetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GreetService_ServiceDesc is the grpc.ServiceDesc for GreetService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -100,6 +132,10 @@ var GreetService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GreetOnce",
 			Handler:    _GreetService_GreetOnce_Handler,
+		},
+		{
+			MethodName: "CreateGreet",
+			Handler:    _GreetService_CreateGreet_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
